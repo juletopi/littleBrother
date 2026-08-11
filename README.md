@@ -228,7 +228,7 @@ Esse endpoint devolve um objeto JSON com o resumo da execução, o detalhamento 
 
 ## Licença
 
-Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](https://github.com/juletopi/littleBrother/blob/master/LICENSE) para mais detalhes.
+Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](https://github.com/juletopi/littleBrother/blob/main/LICENSE) para mais detalhes.
 
 <div align="left">
    <h6><a href="#littlebrother"> Voltar para o início ↺</a></h6>
