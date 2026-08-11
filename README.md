@@ -1,4 +1,7 @@
 <div align="center">
+   <a href="">
+    <img src="assets/eye-icon.png" alt="littleBrother-logo" width="70px" title="littleBrother">
+   </a>
    <h2 align="center">littleBrother</h2>
    <p align="center">
       Ferramenta com interface para varredura de portas TCP e UDP, voltada para testes em rede local.
@@ -35,7 +38,7 @@
 
 <div align="center">
   <p>
-    <img src="docs/intro.jpeg" alt="littleBrother image" style="max-width:100%; height:auto;" />
+    <img src="docs/intro.jpeg" alt="littleBrother image" style="max-width:80%; height:auto;" />
   </p>
 </div>
 
