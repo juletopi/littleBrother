@@ -80,6 +80,7 @@ A ferramenta foi pensada para operar **em Linux**. Em Windows e macOS, o funcion
 > - **Python 3.10+**
 > - **Linux recomendado** para melhor suporte ao modo SYN
 > - **pip** para instalar dependências
+> - **Flask** para o backend web
 > - **Scapy** para a parte de varredura de rede
 
 ### Iniciando o projeto
