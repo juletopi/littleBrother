@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>{% block title %}littleBrother{% endblock %}</title>
+	<link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+	<style>
+		:root {
+			--bg: #0c1218;
+			--panel: #0f171f;
+			--panel-2: #131f29;
+			--border: #203041;
+			--text: #d7e1ea;
+			--muted: #8ea3b6;
+			--accent: #42d392;
+			--accent-2: #12b981;
+			--warn: #fbbf24;
+			--closed: #94a3b8;
+			--filtered: #f59e0b;
+			--open: #34d399;
+			--shadow: 0 16px 35px rgba(0, 0, 0, .35);
+		}
+
+		* {
+			box-sizing: border-box;
+			scrollbar-width: thin;
+			scrollbar-color: rgba(97, 117, 136, .7) rgba(10, 16, 22, .35);
+		}
+
+		*::-webkit-scrollbar {
+			width: 8px;
+			height: 8px;
+		}
+
+		*::-webkit-scrollbar-track {
+			background: rgba(10, 16, 22, .35);
+			border-radius: 999px;
+		}
+
+		*::-webkit-scrollbar-thumb {
+			background: rgba(97, 117, 136, .7);
+			border: 2px solid rgba(10, 16, 22, .35);
+			border-radius: 999px;
+		}
+
+		*::-webkit-scrollbar-thumb:hover {
+			background: rgba(126, 150, 171, .85);
+		}
+
+		*::-webkit-scrollbar-corner {
+			background: rgba(10, 16, 22, .35);
+		}
+
+		body {
+			margin: 0;
+			height: 100vh;
+			background: radial-gradient(1200px 400px at 20% -10%, rgba(66, 211, 146, .15), transparent 70%), radial-gradient(800px 350px at 100% 0%, rgba(59, 130, 246, .12), transparent 70%), var(--bg);
+			color: var(--text);
+			font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+			overflow: hidden;
+		}
+
+		.app {
+			display: flex;
+			height: 100vh;
+			width: 100vw;
+		}
+
+		.sidebar {
+			width: 290px;
+			border-right: 1px solid var(--border);
+			background: linear-gradient(180deg, rgba(16, 27, 37, .95), rgba(13, 22, 30, .95));
+			padding: 18px 14px 10px;
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+
+		.brand {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-weight: 700;
+			letter-spacing: .4px;
+			font-size: 15px;
+			color: #f1f8ff;
+			margin-bottom: 4px;
+		}
+
+		.brand-mark {
+			width: 18px;
+			height: 18px;
+			display: block;
+			object-fit: contain;
+			filter: drop-shadow(0 0 12px rgba(66, 211, 146, .8));
+		}
+
+		.module-nav {
+			display: grid;
+			gap: 8px;
+		}
+
+		.module-nav a {
+			border: 1px solid var(--border);
+			border-radius: 10px;
+			padding: 9px 10px;
+			color: var(--text);
+			text-decoration: none;
+			background: var(--panel);
+			font-size: 13px;
+		}
+
+		.module-nav a:hover,
+		.module-nav a.active {
+			border-color: #31556b;
+			background: #183143;
+			color: #dff9ec;
+		}
+
+		.module-nav-current {
+			display: flex;
+			align-items: stretch;
+			border: 1px solid var(--border);
+			border-radius: 10px;
+			background: #183143;
+			border-color: #31556b;
+	}
+
+		.module-nav-current > a {
+			flex: 1;
+			border: 0;
+			background: transparent;
+			color: #dff9ec;
+		}
+
+		.module-nav-current > a:hover {
+			border: 0;
+			background: transparent;
+		}
+
+		.module-nav-toggle {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 38px;
+			border: 0;
+			border-left: 1px solid #31556b;
+			border-radius: 0 9px 9px 0;
+			background: transparent;
+			color: #dff9ec;
+			cursor: pointer;
+		}
+
+		.module-nav-toggle:hover,
+		.module-nav-toggle:focus-visible {
+			background: rgba(66, 211, 146, .12);
+			color: var(--accent);
+			outline: none;
+		}
+
+		.module-nav-toggle:focus-visible {
+			box-shadow: inset 0 0 0 1px var(--accent);
+		}
+
+		.module-nav-toggle .bi {
+			transition: transform 0.2s ease;
+		}
+
+		.module-nav-toggle:not(.collapsed) .bi {
+			transform: rotate(180deg);
+		}
+
+		.module-nav-collapse {
+			gap: 8px;
+		}
+
+		.module-nav-collapse.show {
+			display: grid;
+		}
+
+		.module-nav-collapse > a {
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.18s ease, visibility 0s linear 0.18s;
+		}
+
+		.module-nav-collapse > a.is-visible {
+			opacity: 1;
+			visibility: visible;
+			transition-delay: 0s;
+		}
+
+		.module-nav-toggle span {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border: 0;
+		}
+
+		.module-nav-toggle:active {
+			border: 0;
+		}
+
+		.module-nav-toggle {
+			cursor: pointer;
+		}
+
+		.sidebar-footer {
+			margin-top: auto;
+			padding-top: 12px;
+			border-top: 1px solid rgba(146, 163, 184, .18);
+			color: var(--muted);
+			font-size: 8.5px;
+			line-height: 1.5;
+			text-align: center;
+		}
+
+		.sidebar-footer a {
+			color: var(--muted);
+			text-decoration: none;
+		}
+
+		.main {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			min-width: 0;
+		}
+
+		@media (max-width: 760px) {
+			.app {
+				flex-direction: column;
+			}
+
+			.sidebar {
+				width: 100%;
+				border-right: 0;
+				border-bottom: 1px solid var(--border);
+				max-height: 280px;
+			}
+		}
+	</style>
+	{% block head %}{% endblock %}
+</head>
+<body>
+	<div class="app">
+		<aside class="sidebar">
+			<div class="brand">
+                <img class="brand-mark" src="{{ url_for('static', filename='assets/eye-icon.png') }}" alt="littleBrother" /> littleBrother
+            </div>
+			<nav class="module-nav" aria-label="Modulos da aplicacao">
+			{% if request.path == '/' %}
+				<a class="active" href="/"><i class="bi bi-grid-1x2-fill me-2" aria-hidden="true"></i>Menu principal</a>
+				<a href="/scanner"><i class="bi bi-radar me-2" aria-hidden="true"></i>Scanner de rede</a>
+				<a href="/zip-cracker"><i class="bi bi-file-earmark-lock me-2" aria-hidden="true"></i>Crackeador ZIP</a>
+			{% elif request.path == '/scanner' %}
+				<div class="module-nav-current">
+					<a class="active" href="/scanner"><i class="bi bi-radar me-2" aria-hidden="true"></i>Scanner de rede</a>
+					<button class="module-nav-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#moduleNavigation" aria-expanded="false" aria-controls="moduleNavigation" aria-label="Exibir outros módulos">
+						<span>Exibir outros módulos</span>
+						<i class="bi bi-chevron-down" aria-hidden="true"></i>
+					</button>
+				</div>
+				<div class="collapse module-nav-collapse" id="moduleNavigation">
+					<a href="/"><i class="bi bi-grid-1x2-fill me-2" aria-hidden="true"></i>Menu principal</a>
+					<a href="/zip-cracker"><i class="bi bi-file-earmark-lock me-2" aria-hidden="true"></i>Crackeador ZIP</a>
+				</div>
+			{% else %}
+				<div class="module-nav-current">
+					<a class="active" href="/zip-cracker"><i class="bi bi-file-earmark-lock me-2" aria-hidden="true"></i>Crackeador ZIP</a>
+					<button class="module-nav-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#moduleNavigation" aria-expanded="false" aria-controls="moduleNavigation" aria-label="Exibir outros módulos">
+						<span>Exibir outros módulos</span>
+						<i class="bi bi-chevron-down" aria-hidden="true"></i>
+					</button>
+				</div>
+				<div class="collapse module-nav-collapse" id="moduleNavigation">
+					<a href="/"><i class="bi bi-grid-1x2-fill me-2" aria-hidden="true"></i>Menu principal</a>
+					<a href="/scanner"><i class="bi bi-radar me-2" aria-hidden="true"></i>Scanner de rede</a>
+				</div>
+			{% endif %}
+			</nav>
+			{% block sidebar_tools %}{% endblock %}
+			<footer class="sidebar-footer">&copy; Feito por <a href="https://github.com/juletopi">Juletopi</a> | <a href="https://github.com/juletopi/littleBrother">GitHub</a></footer>
+		</aside>
+		<main class="main">{% block content %}{% endblock %}</main>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script>
+		document.querySelectorAll(".module-nav-collapse").forEach((collapse) => {
+			const links = collapse.querySelectorAll("a");
+
+			collapse.addEventListener("show.bs.collapse", () => {
+				links.forEach((link) => link.classList.remove("is-visible"));
+			});
+
+			collapse.addEventListener("shown.bs.collapse", () => {
+				links.forEach((link) => link.classList.add("is-visible"));
+			});
+
+			collapse.addEventListener("hide.bs.collapse", () => {
+				links.forEach((link) => link.classList.remove("is-visible"));
+			});
+		});
+	</script>
+	{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}littleBrother | Modulos{% endblock %}
+
+{% block head %}
+<style>
+	.module-selection {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: 16px;
+		margin-top: 34px;
+		max-width: 780px;
+	}
+
+	.module-selection a {
+		display: block;
+		padding: 22px;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		color: var(--text);
+		text-decoration: none;
+		background: linear-gradient(145deg, #14222d, #0f171f);
+		transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+	}
+
+	.module-selection a:hover,
+	.module-selection a:focus-visible {
+		border-color: var(--accent);
+		box-shadow: 0 0 0 1px var(--accent), 0 0 18px rgba(66, 211, 146, 0.45);
+		transform: translateY(-2px);
+		outline: none;
+	}
+
+	.module-selection h2 {
+		margin: 0 0 8px;
+		font-size: 18px;
+	}
+
+	.module-selection p {
+		margin: 0;
+		color: var(--muted);
+		line-height: 1.45;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<section style="padding: 56px clamp(24px, 7vw, 100px);">
+	<h1>Escolha um módulo</h1>
+	<p style="color: var(--muted); max-width: 650px; line-height: 1.5;">
+        Ferramentas locais para análise de redes e recuperação de arquivos protegidos.</p>
+	<div class="module-selection">
+		<a href="/scanner">
+            <h2>Scanner de rede</h2>
+            <p>Execute varreduras TCP e UDP e examine os resultados por alvo.</p>
+        </a>
+		<a href="/zip-cracker">
+            <h2>Crackeador ZIP</h2>
+            <p>Quebra de senha para e recuperação de arquivos ZIP</p>
+        </a>
+	</div>
+</section>
+{% endblock %}
