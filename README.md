@@ -121,6 +121,12 @@ http://localhost:5000
 
 ## Uso
 
+<div align="center">
+  <p>
+    <img src="docs/intro_scanner.jpeg" alt="Interface do scanner" width="140" />
+  </p>
+</div>
+
 ### Scanner de rede
 
 #### Comandos da interface
@@ -152,6 +158,18 @@ scan 192.168.0.10,192.168.0.11 1-1024 tcp,udp syn
 - **Linux**: melhor cenário para o projeto, especialmente para `SYN scan`.
 - **Windows**: o scanner funciona, mas o resultado tende a depender mais de firewall e permissões.
 - **macOS**: pode funcionar, mas o comportamento também pode variar por restrições do sistema.
+
+<div align="center">
+  <a href="#">
+    <img width=100% align="center" src="https://capsule-render.vercel.app/api?type=rect&color=151923&height=2&section=header&%20render">
+  </a>
+</div>
+
+<div align="center">
+  <p>
+    <img src="docs/intro_zipcracker.jpeg" alt="Interface do scanner" width="140" />
+  </p>
+</div>
 
 ### Recuperação de ZIP
 
