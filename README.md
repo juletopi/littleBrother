@@ -4,7 +4,7 @@
    </a>
    <h2 align="center">littleBrother</h2>
    <p align="center">
-      Ferramenta com interface para varredura de portas TCP e UDP, voltada para testes em rede local.
+      Plataforma web modular para análise de redes e recuperação de arquivos ZIP. Use com responsabilidade.
    </p>
 </div>
 
@@ -29,30 +29,26 @@
    <a href="#sobre-o-projeto">Sobre</a> &#xa0; • &#xa0;
    <a href="#instalação">Instalação</a> &#xa0; • &#xa0;
    <a href="#uso">Uso</a> &#xa0; • &#xa0;
-   <a href="#endpoints">Endpoints</a> &#xa0; • &#xa0;
    <a href="#licença">Licença</a> &#xa0; • &#xa0;
    <a href="#autor">Autor</a>
 </div>
 
 ----
 
-<div align="center">
-  <p>
-    <img src="docs/intro.jpeg" alt="littleBrother image" style="max-width:80%; height:auto;" />
-  </p>
-</div>
-
 ## Sobre o projeto
 
-O **littleBrother** é uma pequena aplicação web para varredura de portas TCP e UDP, com backend em **Flask** e interface em **HTML/CSS/JavaScript**.
+O **littleBrother** é uma aplicação web modular para atividades locais de análise técnica, com backend em **Flask** e interface em **HTML/CSS/JavaScript**. A aplicação reúne ferramentas independentes em uma navegação comum, atualmente com scanner de rede e recuperação de senhas de arquivos ZIP.
 
-A ferramenta foi pensada para operar **em Linux**. Em Windows e macOS, o funcionamento é possível em partes, mas o comportamento pode variar por limitações de privilégio, firewall e suporte a pacotes de rede. É recomendável uma **VM com o Kali Linux**.
+O uso deve ocorrer somente em redes, arquivos e sistemas para os quais você tenha autorização. O scanner foi pensado para operar melhor em **Linux**; em Windows e macOS, o funcionamento pode variar por limitações de privilégio, firewall e suporte a pacotes de rede. Uma **VM com Kali Linux** continua sendo recomendada.
 
 ### Funcionalidades
 
+- **Menu modular** com navegação compartilhada entre as funcionalidades.
 - **Varredura TCP e UDP** em um ou mais endereços IP.
-- **Método TCP simples** com fallback para `connect scan` e tentativa de `SYN scan` quando disponível em Linux com privilégios elevados.
-- **Classificação de portas** como `open`, `closed` e `filtered`.
+  - **Método TCP simples** com fallback para `connect scan` e tentativa de `SYN scan` quando disponível em Linux com privilégios elevados.
+  - **Classificação de portas** como `open`, `closed` e `filtered`.
+- **Recuperação de senhas ZIP** por wordlist, com suporte a ZipCrypto e AES via `pyzipper` ou 7-Zip.
+  - **Acompanhamento assíncrono** do ZIP com progresso, logs, tempo decorrido e cancelamento.
 
 ### Tecnologias utilizadas
 
@@ -64,6 +60,9 @@ A ferramenta foi pensada para operar **em Linux**. Em Windows e macOS, o funcion
 </a>
 <a href="https://scapy.readthedocs.io/">
    <img src="https://img.shields.io/badge/Scapy-4B8BBE?style=for-the-badge&logo=python&logoColor=white" alt="Scapy-badge">
+</a>
+<a href="https://pypi.org/project/pyzipper/">
+  <img src="https://img.shields.io/badge/pyzipper-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="pyzipper-badge">
 </a>
 
 <div align="left">
@@ -82,6 +81,8 @@ A ferramenta foi pensada para operar **em Linux**. Em Windows e macOS, o funcion
 > - **pip** para instalar dependências
 > - **Flask** para o backend web
 > - **Scapy** para a parte de varredura de rede
+> - **pyzipper** para arquivos ZIP com criptografia AES
+> - **7-Zip opcional** para suporte externo a arquivos ZIP AES
 
 ### Iniciando o projeto
 
@@ -111,7 +112,7 @@ http://localhost:5000
 ```
 
 > [!NOTE]
-> O backend expõe a interface web em `/` e a API de varredura em `/api/scan`.
+> O backend expõe o menu em `/`, o scanner em `/scanner`, o crackeador em `/zip-cracker`, a API de varredura em `/api/scan` e a API de ZIP em `/api/crack`.
 > Em Linux, o `SYN scan` pode ser usado quando o processo tiver privilégios suficientes.
 
 <div align="left">
@@ -120,7 +121,9 @@ http://localhost:5000
 
 ## Uso
 
-### Comandos da interface
+### Scanner de rede
+
+#### Comandos da interface
 
 Na barra de comando da aplicação, você pode usar os seguintes formatos:
 
@@ -130,7 +133,7 @@ scan <targets> <ports> <protocols> [syn|connect]
 scan <targets> <protocols> [syn|connect]
 ```
 
-### Exemplos
+#### Exemplos
 
 ```text
 scan 127.0.0.1 22,80 tcp connect
@@ -138,93 +141,30 @@ scan 127.0.0.1 tcp connect
 scan 192.168.0.10,192.168.0.11 1-1024 tcp,udp syn
 ```
 
-### O que o retorno mostra
+#### O que o retorno mostra
 
 - **open**: porta aberta.
 - **closed**: porta fechada.
 - **filtered**: porta filtrada ou sem resposta conclusiva.
 
-### Observações por sistema operacional
+#### Observações por sistema operacional
 
 - **Linux**: melhor cenário para o projeto, especialmente para `SYN scan`.
 - **Windows**: o scanner funciona, mas o resultado tende a depender mais de firewall e permissões.
 - **macOS**: pode funcionar, mas o comportamento também pode variar por restrições do sistema.
 
-<div align="left">
-   <h6><a href="#littlebrother"> Voltar para o início ↺</a></h6>
-</div>
+### Recuperação de ZIP
 
-## Endpoints
+#### Como recuperar senhas de arquivos ZIP
 
-A aplicação expõe endpoints JSON no backend Flask. Eles são consumidos pela interface web via `fetch`.
+1. Selecione um arquivo `.zip` protegido.
+2. Selecione uma wordlist com uma senha por linha.
+3. Clique em **Iniciar análise**.
+4. Acompanhe o progresso, os logs e o tempo da operação.
 
-### `GET /api/info`
+O processamento ocorre em uma thread separada. Os arquivos enviados são temporários e removidos ao final da sessão. Use este módulo somente com arquivos próprios ou com autorização explícita.
 
-Retorna informações do ambiente detectado pelo backend.
-
-**Resposta exemplo:**
-
-```json
-{
-  "ok": true,
-  "environment": {
-    "platform": "linux",
-    "platform_name": "Linux",
-    "is_linux": true,
-    "is_windows": false,
-    "scapy_available": true,
-    "syn_scan_available": true,
-    "notes": []
-  }
-}
-```
-
-### `POST /api/scan`
-
-Executa a varredura.
-
-Esse endpoint devolve um objeto JSON com o resumo da execução, o detalhamento por alvo e possíveis avisos de ambiente.
-
-**Corpo da requisição:**
-
-```json
-{
-  "targets": "127.0.0.1,192.168.0.10",
-  "ports": "22,80,443,1-1024",
-  "protocols": "tcp,udp",
-  "tcp_method": "connect",
-  "timeout": 1.0,
-  "workers": 200
-}
-```
-
-**Resposta simplificada:**
-
-```json
-{
-  "ok": true,
-  "scan": {
-    "targets": ["127.0.0.1"],
-    "ports": [22, 80, 443],
-    "protocols": ["tcp"],
-    "tcp_method": "connect",
-    "duration_seconds": 0.123
-  },
-  "summary": {
-    "tcp": { "open": 1, "closed": 2, "filtered": 0 },
-    "udp": { "open": 0, "closed": 0, "filtered": 0 }
-  },
-  "results": {
-    "127.0.0.1": {
-      "tcp": [
-        { "port": 22, "status": "open" }
-      ],
-      "udp": []
-    }
-  },
-  "warnings": []
-}
-```
+Para ZIPs AES, o serviço usa 7-Zip quando encontrado no sistema e `pyzipper` como fallback Python. Sem nenhuma dessas opções, a recuperação de arquivos AES não estará disponível.
 
 <div align="left">
    <h6><a href="#littlebrother"> Voltar para o início ↺</a></h6>
