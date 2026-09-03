@@ -15,13 +15,8 @@
 	}
 
 	.new-session {
-		border: 1px solid var(--border);
-		background: linear-gradient(180deg, #162737, #132131);
-		color: #dff7ec;
-		border-radius: 10px;
-		padding: 10px;
-		text-align: center;
-		cursor: pointer;
+		width: 100%;
+		border-radius: 8px;
 	}
 
 	.section-title {
@@ -200,28 +195,15 @@
 		padding-top: 8px;
 	}
 
-	.command-help,
-	#sendBtn {
-		border: 1px solid #394c5e;
-		border-radius: 999px;
-		background: #101c26;
-		color: var(--muted);
-		font-weight: 700;
-		cursor: pointer;
-		padding: 0 14px;
-		height: 34px;
+	.command-help {
+		min-width: 82px;
+		border-radius: 8px;
 	}
 
 	#sendBtn {
 		margin-left: auto;
-		border-color: #2a5c44;
-		background: linear-gradient(180deg, var(--accent), var(--accent-2));
-		color: #052513;
-	}
-
-	#sendBtn:disabled {
-		cursor: not-allowed;
-		opacity: .45;
+		min-width: 92px;
+		border-radius: 8px;
 	}
 
 	@media (max-width: 760px) {
@@ -239,7 +221,7 @@
 
 {% block sidebar_tools %}
 <input id="searchSessions" class="search" type="text" placeholder="Buscar sessões..." />
-<button id="newSessionBtn" class="new-session" type="button"><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Nova sessão</button>
+<button id="newSessionBtn" class="new-session btn btn-outline-success" type="button"><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Nova sessão</button>
 <div class="section-title">Sessões recentes</div>
 <div id="sessionList" class="session-list"></div>
 {% endblock %}
@@ -252,8 +234,8 @@
 	<div class="composer-shell">
 		<input id="commandInput" class="composer-input" type="text" placeholder="scan <targets> <ports> <protocols> [syn|connect]" />
 		<div class="composer-actions">
-			<button id="helpBtn" class="command-help" type="button">help</button>
-			<button id="sendBtn" type="button" disabled>enviar</button>
+			<button id="helpBtn" class="command-help btn btn-outline-secondary" type="button"><i class="bi bi-question-circle me-1" aria-hidden="true"></i>help</button>
+			<button id="sendBtn" class="btn btn-success" type="button" disabled><i class="bi bi-send me-1" aria-hidden="true"></i>enviar</button>
 		</div>
 	</div>
 </div>
