@@ -123,7 +123,7 @@ http://localhost:5000
 
 <div align="center">
   <p>
-    <img src="docs/intro_scanner.jpeg" alt="Interface do scanner" width="140" />
+    <img src="docs/intro_scanner.jpeg" alt="Interface do scanner" width="280" />
   </p>
 </div>
 
@@ -165,9 +165,11 @@ scan 192.168.0.10,192.168.0.11 1-1024 tcp,udp syn
   </a>
 </div>
 
+<br>
+
 <div align="center">
   <p>
-    <img src="docs/intro_zipcracker.jpeg" alt="Interface do scanner" width="140" />
+    <img src="docs/intro_zipcracker.jpeg" alt="Interface do scanner" width="280" />
   </p>
 </div>
 
