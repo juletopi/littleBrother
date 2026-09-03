@@ -14,6 +14,13 @@ import concurrent.futures
 import threading
 import queue
 
+try:
+    import pyzipper
+
+    PYZIPPER_AVAILABLE = True
+except ImportError:
+    PYZIPPER_AVAILABLE = False
+
 class ZipCracker:
     def __init__(self, zip_path, wordlist_path):
         self.zip_path = zip_path
@@ -191,6 +198,22 @@ class ZipCracker:
         """Wrapper da versão detalhada para compatibilidade"""
         success, _ = self.crack_password_with_7z_detailed(password)
         return success
+
+    def crack_password_with_pyzipper(self, password):
+        """Testa uma senha AES usando a implementação Python do pyzipper."""
+        if not PYZIPPER_AVAILABLE:
+            return False
+
+        try:
+            with pyzipper.AESZipFile(self.zip_path) as zip_file:
+                files_to_check = [info for info in zip_file.infolist() if info.file_size > 0]
+                zip_file.setpassword(password.encode("utf-8", errors="ignore"))
+                for zip_info in files_to_check:
+                    zip_file.read(zip_info.filename)
+                    return True
+        except Exception:
+            return False
+        return False
         
     def crack_password_with_7z_detailed(self, password, zip_path=None):
         """Tenta quebrar a senha com o 7-Zip e retorna detalhes"""
@@ -300,11 +323,18 @@ class ZipCracker:
                         "info": f"Arquivo com criptografia {encryption_info['encryption_type']} detectada. Usando 7-Zip para quebra de senha.",
                         "encryption_info": encryption_info
                     }
+                elif PYZIPPER_AVAILABLE:
+                    yield {
+                        "current_password": 0,
+                        "current_text": "",
+                        "info": "Criptografia AES detectada. Usando pyzipper como fallback Python.",
+                        "encryption_info": encryption_info
+                    }
                 else:
                     yield {
                         "current_password": 0,
                         "current_text": "",
-                        "warning": f"AVISO: O arquivo usa criptografia {encryption_info['encryption_type']} e 7-Zip não encontrado. A quebra de senha pode falhar.",
+                        "warning": f"AVISO: o arquivo usa criptografia {encryption_info['encryption_type']}, mas 7-Zip e pyzipper não estão disponíveis.",
                         "encryption_info": encryption_info
                     }
             
@@ -364,7 +394,7 @@ class ZipCracker:
                     
                     result = None
                     
-                    # Se for AES e temos 7z, testar com 7z
+                    # Usar 7-Zip ou pyzipper para arquivos AES.
                     if is_aes and has_7z:
                         success, _ = self.crack_password_with_7z_detailed(password)
                         if success:
@@ -376,6 +406,19 @@ class ZipCracker:
                                         "current_text": password,
                                         "password": password,
                                         "method": "7z"
+                                    }
+                        return result
+
+                    if is_aes and PYZIPPER_AVAILABLE:
+                        if self.crack_password_with_pyzipper(password):
+                            with self._found_password_lock:
+                                if self.found_password is None:
+                                    self.found_password = password
+                                    result = {
+                                        "current_password": idx + 1,
+                                        "current_text": password,
+                                        "password": password,
+                                        "method": "pyzipper"
                                     }
                         return result
                     
