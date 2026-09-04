@@ -220,8 +220,17 @@
 {% endblock %}
 
 {% block sidebar_tools %}
-<input id="searchSessions" class="search" type="text" placeholder="Buscar sessões..." />
-<button id="newSessionBtn" class="new-session btn btn-outline-success" type="button"><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Nova sessão</button>
+<input 
+	id="searchSessions" 
+	class="search" 
+	type="text" 
+	placeholder="Buscar sessões..." />
+<button 
+	id="newSessionBtn" 
+	class="new-session btn btn-outline-success" 
+	type="button">
+<i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Nova sessão
+</button>
 <div class="section-title">Sessões recentes</div>
 <div id="sessionList" class="session-list"></div>
 {% endblock %}
@@ -232,10 +241,26 @@
 <section id="chat" class="chat"></section>
 <div class="composer">
 	<div class="composer-shell">
-		<input id="commandInput" class="composer-input" type="text" placeholder="scan <targets> <ports> <protocols> [syn|connect]" />
+		<input 
+			id="commandInput" 
+			class="composer-input" 
+			type="text" 
+			placeholder="scan <targets> <ports> <protocols> [syn|connect]" />
 		<div class="composer-actions">
-			<button id="helpBtn" class="command-help btn btn-outline-secondary" type="button"><i class="bi bi-question-circle me-1" aria-hidden="true"></i>help</button>
-			<button id="sendBtn" class="btn btn-success" type="button" disabled><i class="bi bi-send me-1" aria-hidden="true"></i>enviar</button>
+			<button 
+				id="helpBtn" 
+				class="command-help btn btn-outline-secondary" 
+				type="button">
+				<i class="bi bi-question-circle me-1" aria-hidden="true"></i>
+				help
+			</button>
+			<button 
+				id="sendBtn" 
+				class="btn btn-success" 
+				type="button" disabled>
+				<i class="bi bi-send me-1" aria-hidden="true"></i>
+				enviar
+			</button>
 		</div>
 	</div>
 </div>
@@ -303,6 +328,7 @@ function renderChat() {
 		
         if (message.html) body.innerHTML = message.text;
 		else { const pre = document.createElement("pre"); pre.textContent = message.text; body.appendChild(pre); }
+		
 		chat.appendChild(card);
 	}
 	chat.scrollTop = chat.scrollHeight;
